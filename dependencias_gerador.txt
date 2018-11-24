@@ -1,0 +1,3 @@
+mysql-connector
+country-list	
+scipy
