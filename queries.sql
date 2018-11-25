@@ -33,7 +33,7 @@ SELECT D.nome, SUM(M.valor) AS mainteiner_valor
 	FROM (distro AS D1 INNER JOIN distro AS D2 ON D1.nome=D2.based_on) AS D, mainteiner AS M 
 	WHERE D.mainteiner = M.nome 
 	GROUP BY D.nome, 
-	ORDER BY SUM(M.valor) DESC; 
+	ORDER BY SUM(M.valor) DESC;	
 
 
 -- 3 consultas envolvendo a junção de três ou mais relações;
@@ -49,7 +49,10 @@ SELECT nome, nome_usuario FROM Distro
 SELECT D.nome, U.nome FROM Distro D, Usuario U, Usuario-Distro UD
 		WHERE  (D.nome = UD.nome AND U.id = UD.userid) AND LEFT(D.nome, 1) = LEFT(U.nome, 1) 
 		XOR D.nome = U.nome;
+
+-- Qual a distribuição de Linux mais frequente entre usuários entre 40 e 60 anos de idade?	
 	
+-- Qual a porcentagem de usuários casuais que preferem usar distribuições rolling release?
 
 -- 2 consultas envolvendo funções de agregação sobre o resultado da junção de pelo menos duas relações
 		
