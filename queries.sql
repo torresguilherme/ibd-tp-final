@@ -12,6 +12,14 @@ SELECT nome FROM distro
 
 -- 3 consultas envolvendo a junção de duas relações;
 
+-- Crie uma lista de usuarios que usam as mesmas distros da usuaria Mirela Moro.
+SELECT U.nome, U.foto, U.idade, U.país FROM Usuario U, Usuario-Distro UD 
+	WHERE (U.id = UD.userid) 
+	AND(nome <> 'Mirela' AND sobrenome <> 'Moro') 
+	AND UD.distroid = 
+	  (SELECT UD.distroid FROM Usuario-Distro NATURAL JOIN Distro
+			WHERE userid=
+				(SELECT id FROM Usuario WHERE nome = 'Mirela' AND sobrenome = 'Moro'))	
 
 -- 3 consultas envolvendo a junção de três ou mais relações;
 
@@ -26,7 +34,7 @@ SELECT nome, nome_usuario FROM Distro
 SELECT D.nome, U.nome FROM Distro D, Usuario U, Usuario-Distro UD
 		WHERE  (D.id = UD.distroid AND U.id = UD.userid) AND LEFT(D.nome, 1) = LEFT(U.nome, 1) 
 		XOR D.nome = U.nome;
-
+	
 
 -- 2 consultas envolvendo funções de agregação sobre o resultado da junção de pelo menos duas relações
 		
