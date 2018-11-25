@@ -155,7 +155,24 @@ distro_arch = [
     ("Red Hat Enterprise Linux", "arm64"), ("Red Hat Enterprise Linux", "i386"), ("Red Hat Enterprise Linux", "ia64"), ("Red Hat Enterprise Linux", "IBM Z"), ("Red Hat Enterprise Linux", "ppc"), ("Red Hat Enterprise Linux", "ppc64el"), ("Red Hat Enterprise Linux", "s390"), ("Red Hat Enterprise Linux", "s390x"), ("Red Hat Enterprise Linux", "x86_64")   
 ]
 
-distro_desktop = []
+distro_desktop = [
+    ("Manjaro", "Cinnamon"), ("Manjaro", "GNOME"), ("Manjaro", "KDE"), ("Manjaro", "MATE"), ("Manjaro", "LXQt"), ("Manjaro", "Xfce"),
+    ("Mint", "Cinnamon"), ("Mint", "MATE"), ("Mint", "Xfce"),
+    ("elementary OS", "Pantheon"),
+    ("MX Linux", "Xfce"),
+    ("Ubuntu LTS", "GNOME"),
+    ("Ubuntu", "GNOME"),
+    ("Debian Stable", "Cinnamon"), ("Debian Stable", "GNOME"), ("Debian Stable", "KDE"), ("Debian Stable", "MATE"), ("Debian Stable", "LXQt"), ("Debian Stable", "Xfce"),
+    ("Debian Testing", "Cinnamon"), ("Debian Testing", "GNOME"), ("Debian Testing", "KDE"), ("Debian Testing", "MATE"), ("Debian Testing", "LXQt"), ("Debian Testing", "Xfce"),
+    ("Debian Unstable", "Cinnamon"), ("Debian Unstable", "GNOME"), ("Debian Unstable", "KDE"), ("Debian Unstable", "MATE"), ("Debian Unstable", "LXQt"), ("Debian Unstable", "Xfce"),
+    ("Fedora", "Cinnamon"), ("Fedora", "GNOME"), ("Fedora", "KDE"), ("Fedora", "MATE"), ("Fedora", "LXQt"), ("Fedora", "Xfce"),
+    ("openSUSE Leap", "Cinnamon"), ("openSUSE Leap", "GNOME"), ("openSUSE Leap", "KDE"), ("openSUSE Leap", "MATE"), ("openSUSE Leap", "LXQt"), ("openSUSE Leap", "Xfce"),
+    ("openSUSE Tumbleweed", "Cinnamon"), ("openSUSE Tumbleweed", "GNOME"), ("openSUSE Tumbleweed", "KDE"), ("openSUSE Tumbleweed", "MATE"), ("openSUSE Tumbleweed", "LXQt"), ("openSUSE Tumbleweed", "Xfce"),
+    ("Solus", "GNOME"), ("Solus", "MATE"),
+    ("Arch", "Cinnamon"), ("Arch", "GNOME"), ("Arch", "KDE"), ("Arch", "MATE"), ("Arch", "Xfce"),
+    ("CentOS", "GNOME"), ("CentOS", "KDE"), 
+    ("Red Hat Enterprise Linux", "GNOME"), ("Red Hat Enterprise Linux", "KDE")
+]
 
 desktops = [
         ("Cinnamon", "Nemo", "Xreader", "Xviewer", None),
