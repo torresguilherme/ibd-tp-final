@@ -117,6 +117,44 @@ sobrenomes = [
         "Moro"
         ]
 
+distros = [
+        ("Manjaro", "Rolling", "pacman", "Manjaro Team", "Arch"),
+        ("Mint", "Common", "apt", "Mint Team", "Debian"),
+        ("elementary OS", "Common", "apt", "elementary Os Team", "Ubuntu"),
+        ("MX Linux", "Common", "apt", "community", "Debian/anitX"),
+        ("Ubuntu LTS", "LTS", "apt", "Canonical", "Debian"),
+        ("Ubuntu", "Common", "apt", "Canonical", "Debian"),
+        ("Debian Stable", "LTS", "apt", "community", "independent"),
+        ("Debian Testing", "Rolling", "apt", "community", "independent"),
+        ("Debian Unstable", "Rolling", "apt", "community", "independent"),
+        ("Fedora", "Rolling", "dnf", "Red Hat", "independent"),
+        ("openSUSE Leap", "LTS", "zypper", "SUSE", "independent"),
+        ("openSUSE Tumbleweed", "Rolling", "zypper", "SUSE", "independent"),
+        ("Solus", "Rolling", "eopkg", "Solus devs", "independent"),
+        ("Arch", "Rolling", "pacman", "community", "independent"),
+        ("CentOS", "LTS", "yum", "CentOS Project", "Red Hat Enterprise Linux"),
+        ("Red Hat Enterprise Linux", "LTS", "yum", "Red Hat", "independent")
+]
+
+desktops = [
+        ("AfterStep"),
+        ("Awesome"),
+        ("BlackBox"),
+        ("Cinnamon"),
+        ("GNOME"),
+        ("IceWM"),
+        ("KDE"),
+        ("MATE"),
+        ("LXQt"),
+        ("Pantheon"),
+        ("Xfce")
+]
+
+maintainters = [
+        ("community", "non-profit", "international", None),
+        ("Manjaro Team", "non-profit", "international", None)
+]
+
 CHANCE_SOBRENOME_ADICIONAL = 0.4
 def generate_names(amount):
     nomes_completos = []
@@ -152,7 +190,7 @@ DB_NAME = "ibd_final"
 #cursor = mydb.cursor()
 #sql_insert_query = """ INSERT INTO usuarios (nome, genero,idade, pais) 
 #                       VALUES (%s,%s,%s,%s) """
-                       
+id = 0
 ages_normal = get_truncated_normal(mean=35, sd=20, low=MIN_AGE, upp=MAX_AGE)
 countries = list(dict(countries_for_language('en')).values())
 for num_insertions in range(TOTAL_INSERT_AMOUNT):
@@ -162,9 +200,22 @@ for num_insertions in range(TOTAL_INSERT_AMOUNT):
     
     
     for buffer in range(INSERT_BUFFER_SIZE):
-        line_tuple = (names[buffer],
+        line_tuple = (id,
+                      names[buffer],
                       generos[random.randint(0,len(generos) - 1)],
                       int(ages[buffer]),
-                      countries[random.randint(0,len(countries) - 1)])
+                      countries[random.randint(0,len(countries) - 1)],
+                      random.choice([True, False]))
+        insert_params.append(line_tuple)
+        id += 1
+    print(insert_params)
+
+for it in distros:
+    print(it)
+
+for num_insertions in range(TOTAL_INSERT_AMOUNT):
+    insert_params = []
+    for buffer in range(INSERT_BUFFER_SIZE):
+        line_tuple = (random.randint(0, id), random.choice(distros)[0])
         insert_params.append(line_tuple)
     print(insert_params)
