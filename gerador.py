@@ -204,14 +204,14 @@ for num_insertions in range(TOTAL_INSERT_AMOUNT):
                       names[buffer],
                       generos[random.randint(0,len(generos) - 1)],
                       int(ages[buffer]),
-                      countries[random.randint(0,len(countries) - 1)])
+                      countries[random.randint(0,len(countries) - 1)],
+                      random.choice([True, False]))
         insert_params.append(line_tuple)
         id += 1
-    #print(insert_params)
+    print(insert_params)
 
 for it in distros:
-    #print(it)
-    pass
+    print(it)
 
 for num_insertions in range(TOTAL_INSERT_AMOUNT):
     insert_params = []
