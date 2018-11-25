@@ -10,10 +10,12 @@ SELECT nome FROM distro
 	AND nome LIKE '%U%' 
 	AND nome NOT LIKE '% %';
 
+
 -- 3 consultas envolvendo a junção de duas relações;
 
 -- Crie uma lista de usuarios que usam as mesmas distros da usuaria Mirella Moro.
-SELECT U.nome, U.foto, U.idade, U.país FROM Usuario U, Usuario-Distro UD 
+SELECT TRIM(U.nome) & ' ' & TRIM(U.sobrenome) AS nome_usuario , U.foto, U.idade, U.país 
+	FROM Usuario U, Usuario-Distro UD 
 	WHERE (U.id = UD.userid) 
 	AND(nome <> 'Mirella' AND sobrenome <> 'Moro') 
 	AND UD.distroid = 
@@ -21,6 +23,12 @@ SELECT U.nome, U.foto, U.idade, U.país FROM Usuario U, Usuario-Distro UD
 			WHERE userid =
 				(SELECT id FROM Usuario WHERE nome = 'Mirella' AND sobrenome = 'Moro'))	
 
+-- Calcular o valor de todos os mantenedores de distros baseadas nas mesmas distros  
+SELECT D.nome, SUM(M.valor) AS mainteiner_valor 
+	FROM (distros AS D1 INNER JOIN distros AS D2 ON D1.nome=D2.based_on) AS D, mainteiner AS M 
+	WHERE D.mainteiner = M.nome 
+	GROUP BY D.nome, 
+	ORDER BY SUM(M.valor) DESC;
 
 -- 3 consultas envolvendo a junção de três ou mais relações;
 
@@ -33,7 +41,7 @@ SELECT nome, nome_usuario FROM Distro
 		XOR nome = nome_usuario;
 
 SELECT D.nome, U.nome FROM Distro D, Usuario U, Usuario-Distro UD
-		WHERE  (D.id = UD.distroid AND U.id = UD.userid) AND LEFT(D.nome, 1) = LEFT(U.nome, 1) 
+		WHERE  (D.nome = UD.nome AND U.id = UD.userid) AND LEFT(D.nome, 1) = LEFT(U.nome, 1) 
 		XOR D.nome = U.nome;
 	
 
