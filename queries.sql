@@ -12,14 +12,15 @@ SELECT nome FROM distro
 
 -- 3 consultas envolvendo a junção de duas relações;
 
--- Crie uma lista de usuarios que usam as mesmas distros da usuaria Mirela Moro.
+-- Crie uma lista de usuarios que usam as mesmas distros da usuaria Mirella Moro.
 SELECT U.nome, U.foto, U.idade, U.país FROM Usuario U, Usuario-Distro UD 
 	WHERE (U.id = UD.userid) 
-	AND(nome <> 'Mirela' AND sobrenome <> 'Moro') 
+	AND(nome <> 'Mirella' AND sobrenome <> 'Moro') 
 	AND UD.distroid = 
 	  (SELECT UD.distroid FROM Usuario-Distro NATURAL JOIN Distro
-			WHERE userid=
-				(SELECT id FROM Usuario WHERE nome = 'Mirela' AND sobrenome = 'Moro'))	
+			WHERE userid =
+				(SELECT id FROM Usuario WHERE nome = 'Mirella' AND sobrenome = 'Moro'))	
+
 
 -- 3 consultas envolvendo a junção de três ou mais relações;
 
@@ -39,8 +40,16 @@ SELECT D.nome, U.nome FROM Distro D, Usuario U, Usuario-Distro UD
 -- 2 consultas envolvendo funções de agregação sobre o resultado da junção de pelo menos duas relações
 		
 -- Selecione a distro com o maior número de usuarios
-SELECT D.nome, 
-SUM(U.nome) AS num_users
-FROM distro AS D LEFT JOIN (usuario NATURAL JOIN usuario_distro) AS U ON userid = distroid
+SELECT D.nome, SUM(U.nome) AS num_usersFROM distro AS D 
+	LEFT JOIN (usuario NATURAL JOIN usuario_distro) AS U 
+	ON userid = distroid
 GROUP BY nome,
 ORDER BY num_users
+
+-- Selecionar a média de usuarios linux por país
+SELECT país, floor(avg(nome))FROM Usuario 
+GROUP BY país;
+
+
+
+
