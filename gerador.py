@@ -283,9 +283,21 @@ for it in distro_desktop:
 
 # cursor = mydb.cursor()
 # sql_insert_query = """ INSERT INTO usuarios (idusuario, nome, sobrenome, idade,  genero, pais, usoProfissional) 
+#                       VALUES (%s,%s,%s,%s,%s,%s,%s) """
+# sql_insert_query2 = """ INSERT INTO desktop (nome, fm, docViewer,  imageViewer, terminal) 
+#                       VALUES (%s,%s,%s,%s,%s) """
+# sql_insert_query3 = """ INSERT INTO distro (nome, tipo, pm,  maintainer, basedOn, foto) 
+#                       VALUES (%s,%s,%s,%s,%s,%s) """
+# sql_insert_query4 = """ INSERT INTO distroarch (nomeDistro, arch) 
+#                       VALUES (%s,%s) """
+# sql_insert_query5 = """ INSERT INTO distrodesktop (distro, desktop) 
+#                       VALUES (%s,%s) """
+# sql_insert_query6 = """ INSERT INTO maintainer (nome, tipo, pais, valor) 
 #                       VALUES (%s,%s,%s,%s) """
+# sql_insert_query7 = """ INSERT INTO usuariodistro (idUsuario, distro) 
+#                       VALUES (%s,%s) """
 
-# mycursor.executemany(sql, val)
+# mycursor.executemany(sql_insert_query3, distros)
 
 # mydb.commit()
 
