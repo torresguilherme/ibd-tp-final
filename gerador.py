@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import random
 import mysql.connector
 from country_list import countries_for_language
@@ -215,21 +216,7 @@ MIN_AGE = 14
 MAX_AGE = 95
 TOTAL_INSERT_AMOUNT = 100
 INSERT_BUFFER_SIZE = 10
-HOST = "localhost"
-USER = "root"
-PASS = "123456"
-DB_NAME = "ibd_final"
-#mydb = mysql.connector.connect(
-#  host=HOST,
-#  database=DB_NAME,
-#  user=USER,
-#  passwd=PASS
-#)
-#
-#
-#cursor = mydb.cursor()
-#sql_insert_query = """ INSERT INTO usuarios (id, nome, sobrenome, genero, idade, pais, usoProfissional) 
-#                       VALUES (%s,%s,%s,%s) """
+
 
 # USUARIO
 id = 0
@@ -281,3 +268,25 @@ for it in distro_arch:
 # DISTRO-DESKTOP
 for it in distro_desktop:
     print(it)
+
+# HOST = "localhost"
+# USER = "root"
+# PASS = ""
+# DB_NAME = "tp2-ibd"
+
+# mydb = mysql.connector.connect(
+#  host=HOST,
+#  database=DB_NAME,
+#  user=USER,
+#  passwd=PASS
+# )
+
+# cursor = mydb.cursor()
+# sql_insert_query = """ INSERT INTO usuarios (idusuario, nome, sobrenome, idade,  genero, pais, usoProfissional) 
+#                       VALUES (%s,%s,%s,%s) """
+
+# mycursor.executemany(sql, val)
+
+# mydb.commit()
+
+# print(mycursor.rowcount, "was inserted.")

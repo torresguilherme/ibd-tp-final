@@ -12,7 +12,7 @@ SELECT nome FROM distro
 
 -- Selecione as distros que não são mantidas pela comunidade
 SELECT * FROM distro
-	WHERE mainteiner <> "community"
+	WHERE mainteiner <> "community";
 
 		
 -- 3 consultas envolvendo a junção de duas relações;
