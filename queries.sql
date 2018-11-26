@@ -19,12 +19,13 @@ SELECT * FROM distro
 
 -- Crie uma lista de usuarios que usam as mesmas distros da usuaria Mirella Moro.
 SELECT TRIM(U.nome) & ' ' & TRIM(U.sobrenome) AS nome_usuario , U.foto, U.idade, U.pais 
-	FROM Usuario U, Usuario-Distro UD 
-	WHERE (U.id = UD.idusuario) 
+	FROM Usuario U, UsuarioDistro UD 
+	WHERE (U.idusuario = UD.idusuario) 
 	AND(nome <> 'Mirella' AND sobrenome <> 'Moro') 
 	AND UD.distro = 
-	  (SELECT UD.distro FROM Usuario-Distro NATURAL JOIN Distro
-			WHERE idusuario =
+	  (SELECT distro FROM UsuarioDistro JOIN Distro
+			WHERE distro = nome 
+			AND idusuario =
 				(SELECT id FROM Usuario WHERE nome = 'Mirella' AND sobrenome = 'Moro'))	
 
 -- Calcular o valor de todos os mantenedores de distros baseadas nas mesmas distros  
@@ -46,21 +47,22 @@ SELECT D.nome, count(DD.distro) AS quantidade
 
 SELECT nome, nome_usuario FROM Distro 
 	NATURAL JOIN (SELECT nome AS nome_usuario FROM Usuario) as U 
-	NATURAL JOIN Usuario-Distro
+	NATURAL JOIN UsuarioDistro
 		WHERE LEFT(nome, 1) = LEFT(nome_usuario, 1) 
 		XOR nome = nome_usuario;
 
-SELECT D.nome, U.nome FROM Distro D, Usuario U, Usuario-Distro UD
+SELECT D.nome, U.nome FROM Distro D, Usuario U, UsuarioDistro UD
 		WHERE  (D.nome = UD.nome AND U.id = UD.userid) AND LEFT(D.nome, 1) = LEFT(U.nome, 1) 
 		XOR D.nome = U.nome;
 
 -- Qual a distribuição de Linux mais frequente entre usuários entre 40 e 60 anos de idade?
-SELECT D.nome, max(count(*)) AS numero_usuarios FROM Distro D, Usuario U, Usuario-Distro UD
+SELECT D.nome, max(count(*)) AS numero_usuarios FROM Distro D, Usuario U, UsuarioDistro UD
 		WHERE  (D.nome = UD.nome AND U.id = UD.idusuario) 
 		AND U.idade BETWEEN 40 AND 60; 	
 	
 -- Qual a porcentagem de usuários casuais que preferem usar distribuições rolling release?
-SELECT (count(*) 100 / (SELECT count(*) FROM Usuario WHERE usoProfissional = 0)) AS porcentagem FROM Distro D, Usuario U, Usuario-Distro UD
+SELECT (count(*) 100 / (SELECT count(*) FROM Usuario WHERE usoProfissional = 0)) AS porcentagem 
+FROM Distro D, Usuario U, UsuarioDistro UD
 		WHERE  (D.nome = UD.nome AND U.id = UD.idusuario) 
 		AND usoProfissional = 0 AND D.tipo = "Rolling";
 
@@ -69,7 +71,7 @@ SELECT (count(*) 100 / (SELECT count(*) FROM Usuario WHERE usoProfissional = 0))
 -- Selecione a distro com o maior número de usuarios
 
 SELECT D.nome, SUM(U.nome) AS num_users FROM distro AS D 
-	LEFT JOIN (usuario NATURAL JOIN Usuario-Distro) AS U 
+	LEFT JOIN (usuario NATURAL JOIN UsuarioDistro) AS U 
 	ON idusuario = distro
 GROUP BY nome,
 ORDER BY num_users
