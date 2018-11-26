@@ -12,25 +12,25 @@ SELECT nome FROM distro
 
 -- Selecione as distros que não são mantidas pela comunidade
 SELECT * FROM distro
-	WHERE mainteiner <> "community"
+	WHERE maintainer <> "community"
 
 		
 -- 3 consultas envolvendo a junção de duas relações;
 
 -- Crie uma lista de usuarios que usam as mesmas distros da usuaria Mirella Moro.
-SELECT TRIM(U.nome) & ' ' & TRIM(U.sobrenome) AS nome_usuario , U.foto, U.idade, U.país 
+SELECT TRIM(U.nome) & ' ' & TRIM(U.sobrenome) AS nome_usuario , U.foto, U.idade, U.pais 
 	FROM Usuario U, Usuario-Distro UD 
-	WHERE (U.id = UD.userid) 
+	WHERE (U.id = UD.idusuario) 
 	AND(nome <> 'Mirella' AND sobrenome <> 'Moro') 
-	AND UD.distroid = 
-	  (SELECT UD.distroid FROM Usuario-Distro NATURAL JOIN Distro
-			WHERE userid =
+	AND UD.distro = 
+	  (SELECT UD.distro FROM Usuario-Distro NATURAL JOIN Distro
+			WHERE idusuario =
 				(SELECT id FROM Usuario WHERE nome = 'Mirella' AND sobrenome = 'Moro'))	
 
 -- Calcular o valor de todos os mantenedores de distros baseadas nas mesmas distros  
-SELECT D.nome, SUM(M.valor) AS mainteiner_valor 
-	FROM (distro AS D1 INNER JOIN distro AS D2 ON D1.nome=D2.based_on) AS D, mainteiner AS M 
-	WHERE D.mainteiner = M.nome 
+SELECT D.nome, SUM(M.valor) AS maintainer_valor 
+	FROM (distro AS D1 INNER JOIN distro AS D2 ON D1.nome=D2.basedOn) AS D, maintainer AS M 
+	WHERE D.maintainer = M.nome 
 	GROUP BY D.nome, 
 	ORDER BY SUM(M.valor) DESC;	
 
@@ -56,29 +56,25 @@ SELECT D.nome, U.nome FROM Distro D, Usuario U, Usuario-Distro UD
 
 -- Qual a distribuição de Linux mais frequente entre usuários entre 40 e 60 anos de idade?
 SELECT D.nome, max(count(*)) AS numero_usuarios FROM Distro D, Usuario U, Usuario-Distro UD
-		WHERE  (D.nome = UD.nome AND U.id = UD.userid) 
+		WHERE  (D.nome = UD.nome AND U.id = UD.idusuario) 
 		AND U.idade BETWEEN 40 AND 60; 	
 	
 -- Qual a porcentagem de usuários casuais que preferem usar distribuições rolling release?
-SELECT (count(*) 100 / (SELECT count(*) FROM Usuario WHERE tipo_uso = "casual")) AS porcentagem FROM Distro D, Usuario U, Usuario-Distro UD
-		WHERE  (D.nome = UD.nome AND U.id = UD.userid) 
-		AND tipo_uso = "casual" AND D.tipo = "rolling release";
+SELECT (count(*) 100 / (SELECT count(*) FROM Usuario WHERE usoProfissional = 0)) AS porcentagem FROM Distro D, Usuario U, Usuario-Distro UD
+		WHERE  (D.nome = UD.nome AND U.id = UD.idusuario) 
+		AND usoProfissional = 0 AND D.tipo = "Rolling";
 
 -- 2 consultas envolvendo funções de agregação sobre o resultado da junção de pelo menos duas relações
 		
 -- Selecione a distro com o maior número de usuarios
 
 SELECT D.nome, SUM(U.nome) AS num_users FROM distro AS D 
-	LEFT JOIN (usuario NATURAL JOIN usuario_distro) AS U 
-	ON userid = distroid
+	LEFT JOIN (usuario NATURAL JOIN Usuario-Distro) AS U 
+	ON idusuario = distro
 GROUP BY nome,
 ORDER BY num_users
 
 -- Selecionar a média de usuarios linux por país
 
-SELECT país, floor(avg(nome))FROM Usuario 
-GROUP BY país;
-
-
-
-
+SELECT pais, floor(avg(nome))FROM Usuario 
+GROUP BY pais;
