@@ -12,8 +12,7 @@ SELECT nome FROM distro
 
 -- Selecione as distros que não são mantidas pela comunidade
 SELECT * FROM distro
-	WHERE mainteiner NOT IN
-		(SELECT nome FROM Mainteiner); 
+	WHERE mainteiner <> "community"
 
 		
 -- 3 consultas envolvendo a junção de duas relações;
@@ -35,7 +34,12 @@ SELECT D.nome, SUM(M.valor) AS mainteiner_valor
 	GROUP BY D.nome, 
 	ORDER BY SUM(M.valor) DESC;	
 
-
+-- Selecione a quantidade de distros que tem como ambiente desktop o GNOME
+SELECT D.nome, count(DD.distro) AS quantidade 
+	FROM Desktop D, Distro_Desktop AS DD 
+	WHERE D.nome = DD.desktop ;
+	
+ 
 -- 3 consultas envolvendo a junção de três ou mais relações;
 
 -- Mostre o nome do usuario e da distro onde as primeiras letras de cada são iguais. 	
