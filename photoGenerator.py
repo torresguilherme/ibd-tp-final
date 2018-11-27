@@ -4,7 +4,7 @@ from PIL.ImageOps import grayscale
 from PIL import ImageEnhance
 import random
 import os
-import math
+import io
 #From: https://stackoverflow.com/questions/29332424/changing-colour-of-an-image/29379704#29379704
 def image_tint(src, tint='#fffab5'):
     if Image.isStringType(src):  # file path?
@@ -115,20 +115,18 @@ def generate_user(genre):
         beard = contrast.enhance(0.2 + (brightnessFactor))
         result.paste(beard,(0,0),beard)
     return result
+baseDir = "UserImg"
+def generate_user_photo_path(genre,imgId):
+    if (genre != "M" or genre != "F"):
+        genre = random.choice(["M","F"])
+    result = generate_user(genre)
+    finalDir = os.path.join(baseDir,str(imgId)[-2:])
+    if not os.path.isdir(finalDir):
+        os.makedirs(finalDir)
 
-amt = 80
-column_amount  = 10
-image_width = 32
-image_height= 48
-row_amount = math.ceil(amt/column_amount)
-print("ROWS:")
-print(row_amount)
-img = Image.new('RGB', (image_width * column_amount,image_height * row_amount), (255, 255, 255))
-genres = ["M","F"]
-for i in range(amt):
+    finalDirWithImage = os.path.join(finalDir,str(imgId) + ".png")
+    result.save(finalDirWithImage,format='PNG')
+    return finalDirWithImage
     
-    result = generate_user(random.choice(genres))
-    result.save("UserImg/img"  + str(i) + ".png")
-    img.paste(result,((i%(column_amount)) * image_width,math.floor(i/column_amount) * image_height),result)
-img.save("tmp.png")
+    
 #img.show()
