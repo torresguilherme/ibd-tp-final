@@ -2,7 +2,7 @@
 
 -- Encontre as distros que tem todas as vogais e nenhum espaço em seu nome.
 
-SELECT nome FROM distro 
+SELECT * FROM distro 
 	WHERE nome LIKE '%A%' 
 	AND nome LIKE '%E%' 
 	AND nome LIKE '%I%' 
@@ -26,7 +26,7 @@ SELECT TRIM(U.nome) & ' ' & TRIM(U.sobrenome) AS nome_usuario , U.foto, U.idade,
 	  (SELECT distro FROM UsuarioDistro JOIN Distro
 			WHERE distro = nome 
 			AND idusuario =
-				(SELECT id FROM Usuario WHERE nome = 'Mirella' AND sobrenome = 'Moro'))	
+				(SELECT idusuario FROM Usuario WHERE nome = 'Mirella' AND sobrenome = 'Moro'))	
 
 -- Calcular o valor de todos os mantenedores de distros baseadas nas mesmas distros  
 SELECT D.nome, SUM(M.valor) AS maintainer_valor 
@@ -56,7 +56,8 @@ SELECT D.nome, U.nome FROM Distro D, Usuario U, UsuarioDistro UD
 		XOR D.nome = U.nome;
 
 -- Qual a distribuição de Linux mais frequente entre usuários entre 40 e 60 anos de idade?
-SELECT D.nome, max(count(*)) AS numero_usuarios FROM Distro D, Usuario U, UsuarioDistro UD
+SELECT D.nome, max(count(*)) AS numero_usuarios 
+FROM Distro D, Usuario U, UsuarioDistro UD
 		WHERE  (D.nome = UD.nome AND U.id = UD.idusuario) 
 		AND U.idade BETWEEN 40 AND 60; 	
 	
@@ -78,5 +79,5 @@ ORDER BY num_users
 
 -- Selecionar a média de usuarios linux por país
 
-SELECT pais, floor(avg(nome))FROM Usuario 
+SELECT pais, count(*)FROM Usuario 
 GROUP BY pais;
