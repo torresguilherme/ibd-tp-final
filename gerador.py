@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import random
 import mysql.connector
+import photoGenerator
 from country_list import countries_for_language
 from scipy.stats import truncnorm
 
@@ -8,6 +9,11 @@ from scipy.stats import truncnorm
 def get_truncated_normal(mean=0, sd=1, low=0, upp=10):
     return truncnorm(
         (low - mean) / sd, (upp - mean) / sd, loc=mean, scale=sd)
+#http://www.mysqltutorial.org/python-mysql-blob/
+def read_file(filename):
+    with open(filename, 'rb') as f:
+        photo = f.read()
+    return photo
 generos = [
         "Masculino",
         "Feminino",
@@ -119,22 +125,22 @@ sobrenomes = [
         ]
 
 distros = [
-        ("Manjaro", "Rolling", "pacman", "Manjaro Team", "Arch"),
-        ("Mint", "LTS", "apt", "Mint Team", "Debian Unstable"),
-        ("elementary OS", "Common", "apt", "elementary OS Team", "Ubuntu LTS"),
-        ("MX Linux", "Common", "apt", "community", "Debian Stable"),
-        ("Ubuntu LTS", "LTS", "apt", "Canonical", "Debian Stable"),
-        ("Ubuntu", "Common", "apt", "Canonical", "Debian Stable"),
-        ("Debian Stable", "LTS", "apt", "community", None),
-        ("Debian Testing", "Rolling", "apt", "community", None),
-        ("Debian Unstable", "Rolling", "apt", "community", None),
-        ("Fedora", "Rolling", "dnf", "Red Hat", None),
-        ("openSUSE Leap", "LTS", "zypper", "SUSE", None),
-        ("openSUSE Tumbleweed", "Rolling", "zypper", "SUSE", None),
-        ("Solus", "Rolling", "eopkg", "Solus devs", None),
-        ("Arch", "Rolling", "pacman", "community", None),
-        ("CentOS", "LTS", "yum", "Red Hat", "Red Hat Enterprise Linux"),
-        ("Red Hat Enterprise Linux", "LTS", "yum", "Red Hat", None)
+        ("Red Hat Enterprise Linux", "LTS", "yum", "Red Hat", None, None),
+        ("Arch", "Rolling", "pacman", "community", None, None),
+        ("Debian Stable", "LTS", "apt", "community", None, None),
+        ("Debian Testing", "Rolling", "apt", "community", None,None),
+        ("Debian Unstable", "Rolling", "apt", "community", None, None),
+        ("Ubuntu LTS", "LTS", "apt", "Canonical", "Debian Stable", None),
+        ("Ubuntu", "Common", "apt", "Canonical", "Debian Stable", None),
+        ("Manjaro", "Rolling", "pacman", "Manjaro Team", "Arch",None),
+        ("Mint", "LTS", "apt", "Mint Team", "Debian Unstable", None),
+        ("elementary OS", "Common", "apt", "elementary OS Team", "Ubuntu LTS", None),
+        ("MX Linux", "Common", "apt", "community", "Debian Stable", None),
+        ("Fedora", "Rolling", "dnf", "Red Hat", None, None),
+        ("openSUSE Leap", "LTS", "zypper", "SUSE", None, None),
+        ("openSUSE Tumbleweed", "Rolling", "zypper", "SUSE", None, None),
+        ("Solus", "Rolling", "eopkg", "Solus devs", None, None),
+        ("CentOS", "LTS", "yum", "Red Hat", "Red Hat Enterprise Linux", None),
 ]
 
 distro_arch = [
@@ -185,7 +191,7 @@ desktops = [
         ("Xfce", "Thunar", None, "Ristretto", "Xfce Terminal")
 ]
 
-maintainters = [
+maintainers = [
         ("community", "non-profit", "international", None),
         ("Manjaro Team", "non-profit", "international", None),
         ("Mint Team", "non-profit", "Ireland", None),
@@ -219,86 +225,104 @@ INSERT_BUFFER_SIZE = 10
 
 
 # USUARIO
-id = 0
+idusuario = 0
 ages_normal = get_truncated_normal(mean=35, sd=20, low=MIN_AGE, upp=MAX_AGE)
 countries = list(dict(countries_for_language('en')).values())
+users = []
 for num_insertions in range(TOTAL_INSERT_AMOUNT):
     names = generate_names(INSERT_BUFFER_SIZE)
     ages = ages_normal.rvs(INSERT_BUFFER_SIZE)
-    insert_params = []
     
     
     for buffer in range(INSERT_BUFFER_SIZE):
-        line_tuple = (id,
+        genero = generos[random.randint(0,len(generos) - 1)]
+        line_tuple = (idusuario,
                       names[buffer].split(' ')[0],
                       names[buffer].split(' ')[1],
-                      generos[random.randint(0,len(generos) - 1)],
+                      genero,
                       int(ages[buffer]),
                       countries[random.randint(0,len(countries) - 1)],
-                      random.choice([True, False]))
-        insert_params.append(line_tuple)
-        id += 1
-    print(insert_params)
+                      random.choice([True, False]),
+                      read_file(photoGenerator.generate_user_photo_path(genero,idusuario)))
+        users.append(line_tuple)
+        idusuario += 1
+    #print(insert_params)
 
 # DISTRO
 for it in distros:
-    print(it)
+    #print(it)
+    pass
 
 # USUARIO-DISTRO
+insert_params = []
 for num_insertions in range(TOTAL_INSERT_AMOUNT):
-    insert_params = []
     for buffer in range(INSERT_BUFFER_SIZE):
-        line_tuple = (random.randint(0, id), random.choice(distros)[0])
-        insert_params.append(line_tuple)
-    print(insert_params)
+        line_tuple = (random.randint(0, idusuario), random.choice(distros)[0])
+        if not (line_tuple in insert_params):
+            insert_params.append(line_tuple)
+    #print(insert_params)
 
 # DESKTOP
 for it in desktops:
-    print(it)
+    #print(it)
+    pass
 
 # MAINTAINER
-for it in maintainters:
-    print(it)
+for it in maintainers:
+    #print(it)
+    pass
 
 # DISTRO-ARCH
 
 for it in distro_arch:
-    print(it)
+    #print(it)
+    pass
 
 # DISTRO-DESKTOP
 for it in distro_desktop:
-    print(it)
+    #print(it)
+    pass
 
-# HOST = "localhost"
-# USER = "root"
-# PASS = ""
-# DB_NAME = "tp2-ibd"
+HOST = "localhost"
+USER = "root"
+PASS = "123456"
+DB_NAME = "linux_distros"
 
-# mydb = mysql.connector.connect(
+#mydb = mysql.connector.connect(
 #  host=HOST,
 #  database=DB_NAME,
 #  user=USER,
-#  passwd=PASS
-# )
+#  password=PASS,
+#  auth_plugin='mysql_native_password'
+#)
 
-# cursor = mydb.cursor()
-# sql_insert_query = """ INSERT INTO usuarios (idusuario, nome, sobrenome, idade,  genero, pais, usoProfissional) 
-#                       VALUES (%s,%s,%s,%s,%s,%s,%s) """
-# sql_insert_query2 = """ INSERT INTO desktop (nome, fm, docViewer,  imageViewer, terminal) 
-#                       VALUES (%s,%s,%s,%s,%s) """
-# sql_insert_query3 = """ INSERT INTO distro (nome, tipo, pm,  maintainer, basedOn, foto) 
-#                       VALUES (%s,%s,%s,%s,%s,%s) """
-# sql_insert_query4 = """ INSERT INTO distroarch (nomeDistro, arch) 
-#                       VALUES (%s,%s) """
-# sql_insert_query5 = """ INSERT INTO distrodesktop (distro, desktop) 
-#                       VALUES (%s,%s) """
-# sql_insert_query6 = """ INSERT INTO maintainer (nome, tipo, pais, valor) 
-#                       VALUES (%s,%s,%s,%s) """
-# sql_insert_query7 = """ INSERT INTO usuariodistro (idUsuario, distro) 
-#                       VALUES (%s,%s) """
+#cursor = mydb.cursor()
+sql_insert_query = """ INSERT INTO usuario (idusuario, nome, sobrenome, idade,  genero, pais, usoProfissional,foto) 
+           VALUES (%s,%s,%s,%s,%s,%s,%s,%s) """
+sql_insert_query2 = """ INSERT INTO desktop (nome, fm, docViewer,  imageViewer, terminal) 
+           VALUES (%s,%s,%s,%s,%s) """
+sql_insert_query3 = """ INSERT INTO distro (nome, tipo, pm,  maintainer, basedOn, foto) 
+           VALUES (%s,%s,%s,%s,%s,%s) """
+sql_insert_query4 = """ INSERT INTO distroarch (nomeDistro, arch) 
+           VALUES (%s,%s) """
+sql_insert_query5 = """ INSERT INTO distrodesktop (distro, desktop) 
+           VALUES (%s,%s) """
+sql_insert_query6 = """ INSERT INTO maintainer (nome, tipo, pais, valor) 
+           VALUES (%s,%s,%s,%s) """
+sql_insert_query7 = """ INSERT INTO usuariodistro (idUsuario, distro) 
+           VALUES (%s,%s) """
+#cursor.execute("SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED")
+#cursor.executemany(sql_insert_query6,maintainers)
+#print("maintainers inserted!")
+#mydb.commit()
+#cursor.executemany(sql_insert_query3, distros)
+#print("distros inserted!")
+#cursor.executemany(sql_insert_query2,desktops)
+#cursor.executemany(sql_insert_query4,distro_arch)        
+#cursor.executemany(sql_insert_query5,distro_desktop
 
-# mycursor.executemany(sql_insert_query3, distros)
-
-# mydb.commit()
-
-# print(mycursor.rowcount, "was inserted.")
+#cursor.executemany(sql_insert_query,users)
+#cursor.executemany(sql_insert_query7,insert_params)
+#mydb.commit()
+print("Inserts finished!")
+#print(cursor.rowcount, "was inserted.")
